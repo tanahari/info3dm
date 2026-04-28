@@ -1,10 +1,15 @@
 import numpy as np
 import unittest
+import os
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
 font_path = '/Library/Fonts/Arial Unicode.ttf'
 font_prop = font_manager.FontProperties(fname = font_path)
 plt.rcParams['font.family'] = font_prop.get_name()
+
+# 画像保存用のディレクトリを作成
+current_dir = os.path.dirname(os.path.abspath(__file__))
+save_dir = os.path.join(current_dir, 'results')
 
 # y = sin(pi * x * 0.8) * 10 の実装
 def true_function(x):
@@ -39,6 +44,5 @@ if __name__=='__main__':
     plt.legend()
     plt.grid(True, linestyle='--', alpha=0.7)
 
-    plt.savefig('./info3dm_3/fitting/results/ex1.1.png')
-
-    plt.show()
+    save_path = os.path.join(save_dir, 'ex1.1.png')
+    plt.savefig(save_path)
