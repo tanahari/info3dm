@@ -9,17 +9,17 @@ print(Y)
 
 print()
 
-print("regression.py ver.1 の確認")
+print("regression.py ver.2 の確認")
 model = regression.LinearRegression()
 model.fit(X, Y)
 print(model.theta)
 
 print()
 
-print("regression.py ver.2 の確認")
+print("regression.py ver.3 の確認")
 print(model.predict(X))
 
 print()
 
-print("regression.py ver.3 の確認")
+print("regression.py ver.4 の確認")
 print(model.score(X, Y))
