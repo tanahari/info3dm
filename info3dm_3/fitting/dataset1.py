@@ -41,7 +41,7 @@ if __name__=='__main__':
 
     plt.figure(figsize=(8, 5))
     plt.plot(x, y, label=r'Target Function ($y = 10\sin(0.8\pi x)$)', color='blue')
-    plt.title('データマイニング：事象の可視化')
+    plt.title('演習1.1：真の関数の準備')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.axhline(0, color='black', linewidth=0.5)
@@ -71,11 +71,40 @@ if __name__=='__main__':
     plt.figure(figsize=(8, 5))
     plt.plot(x, y, label=r'Target Function ($y = 10\sin(0.8\pi x)$)', color='blue')
     plt.scatter(df['観測点'], df['真値'], color='red', s=40, edgecolors='black', label='サンプル集合 (n=20)', zorder=3)
-    plt.title('演習1.2: 観測点と真値のプロット')
+    plt.title('演習1.2：観測点と真値の準備')
     plt.xlabel('観測点 (x)')
     plt.ylabel('真値 (y)')
+    plt.axhline(0, color='black', linewidth=0.5)
+    plt.axvline(0, color='black', linewidth=0.5)
     plt.legend()
-    plt.grid(True, linestyle=':', alpha=0.6)
+    plt.grid(True, linestyle='--', alpha=0.7)
 
     save_path = os.path.join(save_dir, 'ex1.2.png')
+    plt.savefig(save_path)
+
+
+    print()
+
+    # --- exercises1.3 ---
+
+    print("exercises1.3")
+
+    noise_raw = np.random.normal(loc=0.0, scale=np.sqrt(2.0), size=20)
+    noise_half = noise_raw * 0.5
+    df['観測値'] = df['真値'] + noise_half
+
+    plt.figure(figsize=(8, 5))
+    x_line = np.linspace(-1, 1, 100)
+    plt.plot(x, y, label=r'Target Function ($y = 10\sin(0.8\pi x)$)', color='blue')
+    plt.scatter(df['観測点'], df['真値'], color='red', s=40, edgecolors='black', label='サンプル集合 (n=20)', zorder=3)
+    plt.scatter(df['観測点'], df['観測値'], color='green', marker='x', s=40, label='観測値 (Noisy Data)')
+    plt.title('ノイズを付与した観測値の準備')
+    plt.xlabel('観測点 (x)')
+    plt.ylabel('y')
+    plt.axhline(0, color='black', linewidth=0.5)
+    plt.axvline(0, color='black', linewidth=0.5)
+    plt.legend()
+    plt.grid(True, linestyle='--', alpha=0.7)
+
+    save_path = os.path.join(save_dir, 'ex1.3.png')
     plt.savefig(save_path)
