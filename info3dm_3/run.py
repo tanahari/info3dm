@@ -18,3 +18,8 @@ print()
 
 print("regression.py ver.2 の確認")
 print(model.predict(X))
+
+print()
+
+print("regression.py ver.3 の確認")
+print(model.score(X, Y))
