@@ -108,3 +108,12 @@ if __name__=='__main__':
 
     save_path = os.path.join(save_dir, 'ex1.3.png')
     plt.savefig(save_path)
+
+    print()
+
+    # --- exercises1.4 ---
+
+    print("exercises1.4")
+
+    tsv_path = os.path.join(save_dir, 'dataset.tsv')
+    df.to_csv(tsv_path, sep='t', index=False, encoding='utf-8')
