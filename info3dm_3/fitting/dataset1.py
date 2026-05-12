@@ -4,125 +4,108 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
+
+# --- 設定（グローバル） ---
 font_path = '/Library/Fonts/Arial Unicode.ttf'
-font_prop = font_manager.FontProperties(fname = font_path)
-plt.rcParams['font.family'] = font_prop.get_name()
+if os.path.exists(font_path):
+    font_prop = font_manager.FontProperties(fname=font_path)
+    plt.rcParams['font.family'] = font_prop.get_name()
 
-# 画像保存用のディレクトリを作成
-current_dir = os.path.dirname(os.path.abspath(__file__))
-save_dir = os.path.join(current_dir, 'results')
-os.makedirs(save_dir, exist_ok=True)
+# ディレクトリ設定
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+SAVE_DIR = os.path.join(CURRENT_DIR, 'results')
+os.makedirs(SAVE_DIR, exist_ok=True)
+TSV_PATH = os.path.join(SAVE_DIR, 'dataset.tsv')
 
-# y = sin(pi * x * 0.8) * 10 の実装
+# --- 共通関数 ---
 def true_function(x):
-    y = np.sin(np.pi * x * 0.8) * 10
-    return y
+    """y = 10 * sin(0.8 * pi * x)"""
+    return np.sin(np.pi * x * 0.8) * 10
 
-# テスト用クラス
+# --- テスト用クラス ---
 class TestTrueFunction(unittest.TestCase):
     def test_x_zero_return_zero(self):
-        x = 0
-        correct = 0
+        self.assertAlmostEqual(true_function(0), 0, places=7)
 
-        y = true_function(x)
+# --- 各演習の関数定義 ---
 
-        self.assertAlmostEqual(y, correct, places=7)
-
-if __name__=='__main__':
-    # --- exercises1.1 ---
-    print("exercises1.1")
-
-    # ユニットテスト
-    unittest.main(argv=[''], exit=False)
+def exercise1_1():
+    print("--- exercises1.1 ---")
+    # ユニットテストの実行
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestTrueFunction)
+    unittest.TextTestRunner(verbosity=1).run(suite)
 
     # 描画
     x = np.linspace(-1, 1, 100)
     y = true_function(x)
 
     plt.figure(figsize=(8, 5))
-    plt.plot(x, y, label=r'Target Function ($y = 10\sin(0.8\pi x)$)', color='blue')
+    plt.plot(x, y, label=r'$y = 10\sin(0.8\pi x)$', color='blue')
     plt.title('演習1.1：真の関数の準備')
     plt.xlabel('x')
     plt.ylabel('y')
-    plt.axhline(0, color='black', linewidth=0.5)
-    plt.axvline(0, color='black', linewidth=0.5)
-    plt.legend()
     plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+    plt.savefig(os.path.join(SAVE_DIR, 'ex1.1.png'))
+    plt.close() # メモリ解放のために閉じる
 
-    save_path = os.path.join(save_dir, 'ex1.1.png')
-    plt.savefig(save_path)
-
-    print()
-
-    # --- exercises1.2 ---
-
-    print("exercises1.2")
-
+def exercise1_2():
+    print("--- exercises1.2 ---")
     np.random.seed(0)
     n = 20
     x_sample = np.random.uniform(-1, 1, n)
     y_sample = true_function(x_sample)
 
-    df = pd.DataFrame({
-        '観測点': x_sample,
-        '真値': y_sample
-    })
+    df = pd.DataFrame({'観測点': x_sample, '真値': y_sample})
 
-    plt.figure(figsize=(8, 5))
-    plt.plot(x, y, label=r'Target Function ($y = 10\sin(0.8\pi x)$)', color='blue')
-    plt.scatter(df['観測点'], df['真値'], color='red', s=40, edgecolors='black', label='サンプル集合 (n=20)', zorder=3)
-    plt.title('演習1.2：観測点と真値の準備')
-    plt.xlabel('観測点 (x)')
-    plt.ylabel('真値 (y)')
-    plt.axhline(0, color='black', linewidth=0.5)
-    plt.axvline(0, color='black', linewidth=0.5)
-    plt.legend()
-    plt.grid(True, linestyle='--', alpha=0.7)
-
-    save_path = os.path.join(save_dir, 'ex1.2.png')
-    plt.savefig(save_path)
-
-
-    print()
-
-    # --- exercises1.3 ---
-
-    print("exercises1.3")
-
-    noise_raw = np.random.normal(loc=0.0, scale=np.sqrt(2.0), size=20)
-    noise_half = noise_raw * 0.5
-    df['観測値'] = df['真値'] + noise_half
-
-    plt.figure(figsize=(8, 5))
+    # 描画
     x_line = np.linspace(-1, 1, 100)
-    plt.plot(x, y, label=r'Target Function ($y = 10\sin(0.8\pi x)$)', color='blue')
-    plt.scatter(df['観測点'], df['真値'], color='red', s=40, edgecolors='black', label='サンプル集合 (n=20)', zorder=3)
-    plt.scatter(df['観測点'], df['観測値'], color='green', marker='x', s=40, label='観測値 (Noisy Data)')
-    plt.title('ノイズを付与した観測値の準備')
-    plt.xlabel('観測点 (x)')
-    plt.ylabel('y')
-    plt.axhline(0, color='black', linewidth=0.5)
-    plt.axvline(0, color='black', linewidth=0.5)
+    plt.figure(figsize=(8, 5))
+    plt.plot(x_line, true_function(x_line), color='blue', alpha=0.5)
+    plt.scatter(df['観測点'], df['真値'], color='red', label='サンプル(n=20)')
+    plt.title('演習1.2：観測点と真値')
     plt.legend()
-    plt.grid(True, linestyle='--', alpha=0.7)
-
-    save_path = os.path.join(save_dir, 'ex1.3.png')
-    plt.savefig(save_path)
-
-    print()
-
-    # --- exercises1.4 ---
-
-    print("exercises1.4")
-
-    tsv_path = os.path.join(save_dir, 'dataset.tsv')
-    df.to_csv(tsv_path, sep='t', index=False, encoding='utf-8')
-
-    # --- exercises1.5 ---
-
-    print("exercises1.5")
-
-    load_path = os.path.join(save_dir, 'dataset.tsv')
-    df_loaded = pd.read_csv(load_path, sep='\t', encoding='utf-8')
-    print(df_loaded.head()) # 最初の5行を表示
+    plt.savefig(os.path.join(SAVE_DIR, 'ex1.2.png'))
+    plt.close()
     
+    return df
+
+def exercise1_3(df):
+    print("--- exercises1.3 ---")
+    noise = np.random.normal(loc=0.0, scale=np.sqrt(2.0), size=len(df)) * 0.5
+    df['観測値'] = df['真値'] + noise
+
+    # 描画
+    plt.figure(figsize=(8, 5))
+    plt.scatter(df['観測点'], df['真値'], color='red', label='真値')
+    plt.scatter(df['観測点'], df['観測値'], color='green', marker='x', label='観測値(Noisy)')
+    plt.title('演習1.3：ノイズ付与')
+    plt.legend()
+    plt.savefig(os.path.join(SAVE_DIR, 'ex1.3.png'))
+    plt.close()
+    
+    return df
+
+def exercise1_4(df):
+    print("--- exercises1.4 ---")
+    df.to_csv(TSV_PATH, sep='\t', index=False, encoding='utf-8')
+    print(f"保存完了: {TSV_PATH}")
+
+def exercise1_5():
+    print("--- exercises1.5 ---")
+    if not os.path.exists(TSV_PATH):
+        print("エラー: ファイルが存在しません。先に1.4を実行してください。")
+        return None
+    
+    df_loaded = pd.read_csv(TSV_PATH, sep='\t', encoding='utf-8')
+    print("読み込みデータ確認:")
+    print(df_loaded.head())
+    return df_loaded
+
+# このファイル自体を直接実行した時の動作
+if __name__ == '__main__':
+    exercise1_1()
+    df_sample = exercise1_2()
+    df_noisy = exercise1_3(df_sample)
+    exercise1_4(df_noisy)
+    df_final = exercise1_5()
