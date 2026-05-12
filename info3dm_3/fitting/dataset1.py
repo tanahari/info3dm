@@ -117,3 +117,12 @@ if __name__=='__main__':
 
     tsv_path = os.path.join(save_dir, 'dataset.tsv')
     df.to_csv(tsv_path, sep='t', index=False, encoding='utf-8')
+
+    # --- exercises1.5 ---
+
+    print("exercises1.5")
+
+    load_path = os.path.join(save_dir, 'dataset.tsv')
+    df_loaded = pd.read_csv(load_path, sep='\t', encoding='utf-8')
+    print(df_loaded.head()) # 最初の5行を表示
+    
